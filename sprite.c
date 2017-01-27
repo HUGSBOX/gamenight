@@ -12,19 +12,20 @@
 // * Inventory 
 // * Experience
 // * Etc etc etc
+struct projectile{
+	SDL_Surface* Sprite;
+	SDL_Rect pos;
+	int vel;
+	int lifespan;
+};
 struct sprite {
 	SDL_Surface* Sprite;
 	SDL_Rect pos;
+	struct projectile proj[5];
 	int xvel;
 	int yvel;
-	
-};
-struct projectile {
-	SDL_Surface* Sprite;
-	SDL_Rect pos;
-	int xvel;
-	int yvel;
-	int lifespan;//this describes how many loops the projectile will live for 
+	int active_proj;
+		
 };
 
 //Sprite constructor
@@ -41,6 +42,14 @@ struct sprite make_sprite( char* path_to_image ){
 	new_sprite.pos.w=100;
 	new_sprite.xvel=0;
 	new_sprite.yvel=0;
+	new_sprite.active_proj=0;
+	for( int i=0;i<5;i++){
+		new_sprite.proj[i].Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
+		new_sprite.proj[i].pos.x=0;
+		new_sprite.proj[i].pos.y=0;
+		new_sprite.proj[i].lifespan=0;
+		new_sprite.proj[i].vel=2;
+	}
 	return new_sprite;
 }
 //Projectile constructor.  Works much the same as the sprite constructor, 
@@ -54,8 +63,7 @@ struct projectile make_projectile( char* path_to_image, struct sprite psource ){
 	new_projectile.pos.w=56;
 	new_projectile.pos.x=psource.pos.x;
 	new_projectile.pos.y=psource.pos.y;
-	new_projectile.xvel=2;
-	new_projectile.yvel=0;
+	new_projectile.vel=2;
 	new_projectile.lifespan=500;
 	return new_projectile;
 }
@@ -70,9 +78,13 @@ struct sprite update_pos( struct sprite spr ){
 	spr.pos.x+=spr.xvel;
 	return spr;
 }
+//reinits the projectile to the sprite's position
+struct projectile launch_projectile( struct projectile prj, struct sprite psource ){
+	prj = make_projectile( "assets/zombie.bmp", psource );
+	return prj;
+}
 struct projectile propel( struct projectile prj ){
-	prj.pos.y+=prj.yvel;
-	prj.pos.x+=prj.xvel;
+	prj.pos.x+=prj.vel;
 	prj.lifespan--;
 	return prj;
 }

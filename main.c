@@ -8,10 +8,10 @@ SDL_Surface TRANS_FUCKING_FORM( SDL_Surface* s ){
 
 
 int main( int argc, char *argv[] ){
-	int active_proj = 0;
+
 	//Declares the screen surface
 	SDL_Surface* screen = NULL;
-	//Desclares staddon's face surface 
+	//Desclares staddon's face sprite
 	struct sprite staddon = make_sprite( "assets/fuckinstaddon.bmp" );
 	//This is a very good example of the format any SDL_Rect should conform to
 	staddon.pos.x=100;
@@ -19,7 +19,7 @@ int main( int argc, char *argv[] ){
 	staddon.pos.w=100;
 	staddon.pos.h=100;
 	//I DON'T KNOW HOW BEST TO IMPLIMENT PROJECTILES YET SO FUCK OFF 
-	struct projectile proj;
+	
 
 	//This one's gotta be done at the start of each program (as far as I can tell)
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -62,8 +62,13 @@ int main( int argc, char *argv[] ){
 					staddon.xvel = 1;
 				}
 				else if( e.key.keysym.sym == SDLK_SPACE ){
-					proj = make_projectile( "assets/zombie.bmp", staddon );
-					active_proj = 1;
+					if( staddon.active_proj == 5 ){
+					break;	
+					}
+					else if( staddon.active_proj < 5 ){
+						staddon.proj[staddon.active_proj] = launch_projectile( staddon.proj[staddon.active_proj], staddon );
+						staddon.active_proj++;
+					}
 				}
 				break;
 			}
@@ -88,13 +93,15 @@ int main( int argc, char *argv[] ){
 
 		//RENDERING AREA
 		
-		if( active_proj != 0 ){
-			if( proj.lifespan == 0 ){
-				active_proj = 0;
-				destroy_projectile( proj );
-			}
-			else if( proj.lifespan >= 0 ){
-				proj = propel( proj );
+		if( staddon.active_proj != 0 ){
+			for( int i=0;i<staddon.active_proj;i++ ){
+				if( staddon.proj[i].lifespan == 0 ){
+					staddon.active_proj--;
+					destroy_projectile( staddon.proj[i] );
+				}
+				else if( staddon.proj[i].lifespan >= 0 ){
+					staddon.proj[i] = propel( staddon.proj[i] );
+				}
 			}
 
 		}
@@ -104,8 +111,12 @@ int main( int argc, char *argv[] ){
 
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
 		SDL_FillRect( screen, NULL, ((0,0,0)) );
-		if( active_proj != 0 ){
-			SDL_BlitSurface( proj.Sprite, NULL, screen, &proj.pos );
+		for( int i=0;i<staddon.active_proj;i++ ){
+			if( staddon.active_proj != 0 ){
+				if( staddon.proj[i].lifespan>0 ){
+					SDL_BlitSurface( staddon.proj[i].Sprite, NULL, screen, &staddon.proj[i].pos );
+				}
+			}
 		}
 		SDL_BlitSurface( staddon.Sprite, NULL, screen, &staddon.pos );
 		SDL_Flip( screen );
