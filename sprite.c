@@ -67,10 +67,6 @@ struct projectile make_projectile( char* path_to_image, struct sprite psource ){
 	new_projectile.lifespan=500;
 	return new_projectile;
 }
-//Projectile destructor 
-void destroy_projectile( struct projectile proj ){
-	SDL_FreeSurface ( proj.Sprite );
-}
 
 //Movement-related functions
 struct sprite update_pos( struct sprite spr ){

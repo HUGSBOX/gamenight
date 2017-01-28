@@ -97,7 +97,6 @@ int main( int argc, char *argv[] ){
 			for( int i=0;i<staddon.active_proj;i++ ){
 				if( staddon.proj[i].lifespan == 0 ){
 					staddon.active_proj--;
-					destroy_projectile( staddon.proj[i] );
 				}
 				else if( staddon.proj[i].lifespan >= 0 ){
 					staddon.proj[i] = propel( staddon.proj[i] );
@@ -112,7 +111,10 @@ int main( int argc, char *argv[] ){
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
 		SDL_FillRect( screen, NULL, ((0,0,0)) );
 		for( int i=0;i<staddon.active_proj;i++ ){
-			if( staddon.active_proj != 0 ){
+			if( staddon.proj[i].lifespan==0 ){
+				
+			}
+			else if( staddon.active_proj != 0 ){
 				if( staddon.proj[i].lifespan>0 ){
 					SDL_BlitSurface( staddon.proj[i].Sprite, NULL, screen, &staddon.proj[i].pos );
 				}
