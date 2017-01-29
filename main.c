@@ -49,60 +49,76 @@ int main( int argc, char *argv[] ){
 				if( e.key.keysym.sym == SDLK_ESCAPE || e.key.keysym.sym == SDLK_q ){
 					run=0;
 				}
-				else if( e.key.keysym.sym == SDLK_DOWN ){
+				else if( e.key.keysym.sym == SDLK_s ){
 					staddon.yvel = 1;
 				}
-				else if( e.key.keysym.sym == SDLK_UP ){
+				else if( e.key.keysym.sym == SDLK_w ){
 					staddon.yvel = -1;
 				}
-				else if( e.key.keysym.sym == SDLK_LEFT ){
+				else if( e.key.keysym.sym == SDLK_a ){
 					staddon.xvel = -1;
 				}
-				else if( e.key.keysym.sym == SDLK_RIGHT ){
+				else if( e.key.keysym.sym == SDLK_d ){
 					staddon.xvel = 1;
 				}
-				else if( e.key.keysym.sym == SDLK_SPACE ){
-					if( staddon.active_proj == 5 ){
-					break;	
+				else if( e.key.keysym.sym == SDLK_RIGHT ){
+					if( staddon.active_proj==1 ){
+						break;
 					}
-					else if( staddon.active_proj < 5 ){
-						staddon.proj[staddon.active_proj] = launch_projectile( staddon.proj[staddon.active_proj], staddon );
-						staddon.active_proj++;
+					staddon.active_proj=1;
+					staddon.proj = launch_projectile( staddon.proj, 'e', staddon );
+				}
+				else if( e.key.keysym.sym == SDLK_LEFT ){
+					if( staddon.active_proj==1 ){
+						break;
 					}
+					staddon.active_proj=1;
+					staddon.proj = launch_projectile( staddon.proj, 'w', staddon );
+				}
+				else if( e.key.keysym.sym == SDLK_UP ){
+					if( staddon.active_proj==1 ){
+						break;
+					}
+					staddon.active_proj=1;
+					staddon.proj = launch_projectile( staddon.proj, 'n', staddon );
+				}
+				else if( e.key.keysym.sym == SDLK_DOWN ){
+					if( staddon.active_proj==1 ){
+						break;
+					}
+					staddon.active_proj=1;
+					staddon.proj = launch_projectile( staddon.proj, 's', staddon );
 				}
 				break;
 			}
-
 			if( e.type == SDL_KEYUP ){
-				if( e.key.keysym.sym == SDLK_DOWN ){
+				if( e.key.keysym.sym == SDLK_s ){
 					staddon.yvel=0;
 				}
-				if( e.key.keysym.sym == SDLK_UP ){
+				else if( e.key.keysym.sym == SDLK_w ){
 					staddon.yvel=0;
 				}
-				if( e.key.keysym.sym == SDLK_RIGHT ){
+				else if( e.key.keysym.sym == SDLK_a ){
 					staddon.xvel=0;
 				}
-				if( e.key.keysym.sym == SDLK_LEFT ){
+				else if( e.key.keysym.sym == SDLK_d ){
 					staddon.xvel=0;
 				}
 				break;
 			}
+			
 		}
 
 
 		//RENDERING AREA
 		
-		if( staddon.active_proj != 0 ){
-			for( int i=0;i<staddon.active_proj;i++ ){
-				if( staddon.proj[i].lifespan == 0 ){
-					staddon.active_proj--;
-				}
-				else if( staddon.proj[i].lifespan >= 0 ){
-					staddon.proj[i] = propel( staddon.proj[i] );
-				}
+		if( staddon.active_proj == 1 ){
+			if( staddon.proj.lifespan == 0 ){
+				staddon.active_proj=0;
 			}
-
+			else if( staddon.proj.lifespan > 0 ){
+				staddon.proj = propel( staddon.proj );
+			}
 		}
 
 		staddon = update_pos( staddon );
@@ -110,19 +126,16 @@ int main( int argc, char *argv[] ){
 
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
 		SDL_FillRect( screen, NULL, ((0,0,0)) );
-		for( int i=0;i<staddon.active_proj;i++ ){
-			if( staddon.proj[i].lifespan==0 ){
-				
-			}
-			else if( staddon.active_proj != 0 ){
-				if( staddon.proj[i].lifespan>0 ){
-					SDL_BlitSurface( staddon.proj[i].Sprite, NULL, screen, &staddon.proj[i].pos );
-				}
+		
+		if( staddon.active_proj == 1 ){
+			if( staddon.proj.lifespan>0 ){
+				SDL_BlitSurface( staddon.proj.Sprite, NULL, screen, &staddon.proj.pos );
 			}
 		}
+		
 		SDL_BlitSurface( staddon.Sprite, NULL, screen, &staddon.pos );
 		SDL_Flip( screen );
-	}
+	}	
 	SDL_Quit();
 	return 0;
 }

@@ -15,17 +15,18 @@
 struct projectile{
 	SDL_Surface* Sprite;
 	SDL_Rect pos;
-	int vel;
+	char dir;
+	int xvel;
+	int yvel;
 	int lifespan;
 };
 struct sprite {
 	SDL_Surface* Sprite;
 	SDL_Rect pos;
-	struct projectile proj[5];
+	struct projectile proj;
 	int xvel;
 	int yvel;
 	int active_proj;
-		
 };
 
 //Sprite constructor
@@ -43,29 +44,16 @@ struct sprite make_sprite( char* path_to_image ){
 	new_sprite.xvel=0;
 	new_sprite.yvel=0;
 	new_sprite.active_proj=0;
-	for( int i=0;i<5;i++){
-		new_sprite.proj[i].Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
-		new_sprite.proj[i].pos.x=0;
-		new_sprite.proj[i].pos.y=0;
-		new_sprite.proj[i].lifespan=0;
-		new_sprite.proj[i].vel=2;
-	}
+	new_sprite.proj.Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
+	new_sprite.proj.dir = 'e';
+	new_sprite.proj.lifespan=0;
+	new_sprite.proj.pos.x=100;
+	new_sprite.proj.pos.y=100;
+	new_sprite.proj.pos.h=56;
+	new_sprite.proj.pos.w=56;
+	new_sprite.proj.xvel=2;
+	new_sprite.proj.yvel=2;
 	return new_sprite;
-}
-//Projectile constructor.  Works much the same as the sprite constructor, 
-//except that it takes a second param - which should be the sprite launching 
-//the projectile.  Projectiles are handled slightly differenly because they 
-//have such short lifespans.
-struct projectile make_projectile( char* path_to_image, struct sprite psource ){
-	struct projectile new_projectile;
-	new_projectile.Sprite = SDL_LoadBMP( path_to_image );
-	new_projectile.pos.h=56;
-	new_projectile.pos.w=56;
-	new_projectile.pos.x=psource.pos.x;
-	new_projectile.pos.y=psource.pos.y;
-	new_projectile.vel=2;
-	new_projectile.lifespan=500;
-	return new_projectile;
 }
 
 //Movement-related functions
@@ -75,12 +63,27 @@ struct sprite update_pos( struct sprite spr ){
 	return spr;
 }
 //reinits the projectile to the sprite's position
-struct projectile launch_projectile( struct projectile prj, struct sprite psource ){
-	prj = make_projectile( "assets/zombie.bmp", psource );
+struct projectile launch_projectile( struct projectile prj, char direction, struct sprite psource ){
+	prj.Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
+	prj.pos.x=psource.pos.x;
+	prj.pos.y=psource.pos.y;
+	prj.dir=direction;
+	prj.lifespan=400;
 	return prj;
 }
-struct projectile propel( struct projectile prj ){
-	prj.pos.x+=prj.vel;
+struct projectile propel( struct projectile prj){
+	if( prj.dir=='e' ){
+		prj.pos.x+=prj.xvel;
+	}
+	else if( prj.dir=='w' ){
+		prj.pos.x-=prj.xvel;
+	}
+	else if( prj.dir=='n' ){
+		prj.pos.y-=prj.yvel;
+	}
+	else if( prj.dir=='s' ){
+		prj.pos.y+=prj.yvel;
+	}
 	prj.lifespan--;
 	return prj;
 }
