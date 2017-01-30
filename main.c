@@ -19,8 +19,11 @@ int main( int argc, char *argv[] ){
 	staddon.pos.w=100;
 	staddon.pos.h=100;
 	//I DON'T KNOW HOW BEST TO IMPLIMENT PROJECTILES YET SO FUCK OFF 
-	
-
+	struct sprite zombie = make_sprite( "assets/zombie.bmp" );
+	zombie.pos.x=400;
+	zombie.pos.y=400;
+	zombie.pos.h=56;
+	zombie.pos.w=56;
 	//This one's gotta be done at the start of each program (as far as I can tell)
 	SDL_Init( SDL_INIT_EVERYTHING );
 	
@@ -122,7 +125,10 @@ int main( int argc, char *argv[] ){
 		}
 
 		staddon = update_pos( staddon );
-
+		
+		if( collide_check( staddon.proj.pos, zombie.pos ) == 1 ){
+		       zombie.alive=0;
+		}	       
 
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
 		SDL_FillRect( screen, NULL, ((0,0,0)) );
@@ -132,7 +138,9 @@ int main( int argc, char *argv[] ){
 				SDL_BlitSurface( staddon.proj.Sprite, NULL, screen, &staddon.proj.pos );
 			}
 		}
-		
+		if( zombie.alive != 0 ){
+			SDL_BlitSurface( zombie.Sprite, NULL, screen, &zombie.pos );
+		}
 		SDL_BlitSurface( staddon.Sprite, NULL, screen, &staddon.pos );
 		SDL_Flip( screen );
 	}	

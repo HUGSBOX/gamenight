@@ -27,6 +27,7 @@ struct sprite {
 	int xvel;
 	int yvel;
 	int active_proj;
+	int alive;
 };
 
 //Sprite constructor
@@ -43,6 +44,7 @@ struct sprite make_sprite( char* path_to_image ){
 	new_sprite.pos.w=100;
 	new_sprite.xvel=0;
 	new_sprite.yvel=0;
+	new_sprite.alive=1;
 	new_sprite.active_proj=0;
 	new_sprite.proj.Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
 	new_sprite.proj.dir = 'e';
@@ -67,6 +69,8 @@ struct projectile launch_projectile( struct projectile prj, char direction, stru
 	prj.Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
 	prj.pos.x=psource.pos.x;
 	prj.pos.y=psource.pos.y;
+	prj.pos.w=56;
+	prj.pos.h=56;
 	prj.dir=direction;
 	prj.lifespan=400;
 	return prj;
@@ -86,4 +90,22 @@ struct projectile propel( struct projectile prj){
 	}
 	prj.lifespan--;
 	return prj;
+}
+int collide_check( SDL_Rect rect1, SDL_Rect rect2 ){
+	int i = rect1.x - ( rect1.w / 2 );
+	int n = rect1.y - ( rect1.h / 2 );
+	int j = rect2.x - ( rect2.w / 2 );
+	int l = rect2.y - ( rect2.h / 2 );
+	for( i; i< ( rect1.x + ( rect1.w / 2 ) );i++){
+		for( n; n< ( rect1.y + ( rect1.h / 2 ) );n++){
+			for( j; j< ( rect2.x + ( rect2.w / 2 ) );j++ ){
+				for( l; l< ( rect2.y + ( rect2.h / 2) );l++ ){
+					if( i == j && n == l ){
+						return 1;
+					}
+				}
+			}
+		}
+	}
+	return 0;
 }
