@@ -100,8 +100,13 @@ int collide_check( SDL_Rect rect1, SDL_Rect rect2 ){
 	int leftSideB = rect2.x - ( rect2.w / 2);
 	int topA = rect1.y - ( rect1.h / 2 );
 	int topB = rect2.y - ( rect2.h / 2 );
-	if( leftSideA >= leftSideB || rightSideA <= rightSideB ){
-		if( topA >= topB || bottomA <= bottomB ){
+	if( rect2.x >= leftSideA && rect2.x <= rightSideA ){
+		if( rect2.y >= topA && rect2.y <= bottomA ){
+			return 1;
+		}
+	}
+	if( rect1.x >= leftSideB && rect1.x <= rightSideB ){
+		if( rect1.y >= topB && rect1.y <= bottomB ){
 			return 1;
 		}
 	}

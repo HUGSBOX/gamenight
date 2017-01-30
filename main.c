@@ -137,9 +137,9 @@ int main( int argc, char *argv[] ){
 
 		staddon = update_pos( staddon );
 		zombie = update_pos( zombie );
-		//if( collide_check( staddon.proj.pos, zombie.pos ) == 1 ){
-		 //      zombie.alive=0;
-		//}	       
+		if( collide_check( staddon.proj.pos, zombie.pos ) == 1 ){
+		       zombie.alive=0;
+		}	       
 
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
 		SDL_FillRect( screen, NULL, ((0,0,0)) );
