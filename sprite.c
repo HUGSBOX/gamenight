@@ -53,8 +53,8 @@ struct sprite make_sprite( char* path_to_image ){
 	new_sprite.proj.pos.y=100;
 	new_sprite.proj.pos.h=56;
 	new_sprite.proj.pos.w=56;
-	new_sprite.proj.xvel=2;
-	new_sprite.proj.yvel=2;
+	new_sprite.proj.xvel=50;
+	new_sprite.proj.yvel=50;
 	return new_sprite;
 }
 
@@ -72,7 +72,7 @@ struct projectile launch_projectile( struct projectile prj, char direction, stru
 	prj.pos.w=56;
 	prj.pos.h=56;
 	prj.dir=direction;
-	prj.lifespan=400;
+	prj.lifespan=50;
 	return prj;
 }
 struct projectile propel( struct projectile prj){
@@ -92,19 +92,17 @@ struct projectile propel( struct projectile prj){
 	return prj;
 }
 int collide_check( SDL_Rect rect1, SDL_Rect rect2 ){
-	int i = rect1.x - ( rect1.w / 2 );
-	int n = rect1.y - ( rect1.h / 2 );
-	int j = rect2.x - ( rect2.w / 2 );
-	int l = rect2.y - ( rect2.h / 2 );
-	for( i; i< ( rect1.x + ( rect1.w / 2 ) );i++){
-		for( n; n< ( rect1.y + ( rect1.h / 2 ) );n++){
-			for( j; j< ( rect2.x + ( rect2.w / 2 ) );j++ ){
-				for( l; l< ( rect2.y + ( rect2.h / 2) );l++ ){
-					if( i == j && n == l ){
-						return 1;
-					}
-				}
-			}
+	int bottomA = rect1.y + ( rect1.h / 2 );
+	int bottomB = rect2.y + ( rect2.h / 2 );
+	int rightSideA = rect1.x + ( rect1.w / 2);
+	int rightSideB = rect2.x + ( rect2.w / 2);
+	int leftSideA = rect1.x - ( rect1.w / 2);
+	int leftSideB = rect2.x - ( rect2.w / 2);
+	int topA = rect1.y - ( rect1.h / 2 );
+	int topB = rect2.y - ( rect2.h / 2 );
+	if( leftSideA >= leftSideB || rightSideA <= rightSideB ){
+		if( topA >= topB || bottomA <= bottomB ){
+			return 1;
 		}
 	}
 	return 0;

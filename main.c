@@ -53,16 +53,16 @@ int main( int argc, char *argv[] ){
 					run=0;
 				}
 				else if( e.key.keysym.sym == SDLK_s ){
-					staddon.yvel = 1;
+					staddon.yvel = 10;
 				}
 				else if( e.key.keysym.sym == SDLK_w ){
-					staddon.yvel = -1;
+					staddon.yvel = -10;
 				}
 				else if( e.key.keysym.sym == SDLK_a ){
-					staddon.xvel = -1;
+					staddon.xvel = -10;
 				}
 				else if( e.key.keysym.sym == SDLK_d ){
-					staddon.xvel = 1;
+					staddon.xvel = 10;
 				}
 				else if( e.key.keysym.sym == SDLK_RIGHT ){
 					if( staddon.active_proj==1 ){
@@ -111,7 +111,18 @@ int main( int argc, char *argv[] ){
 			}
 			
 		}
-
+		if( zombie.pos.x > staddon.pos.x ){
+			zombie.xvel = -1;
+		}
+		if( zombie.pos.x < staddon.pos.x ){
+			zombie.xvel = 1;
+		}
+		if( zombie.pos.y > staddon.pos.y ){
+			zombie.yvel = -1;
+		}
+		if( zombie.pos.y < staddon.pos.y ){
+			zombie.yvel = 1;
+		}
 
 		//RENDERING AREA
 		
@@ -125,10 +136,10 @@ int main( int argc, char *argv[] ){
 		}
 
 		staddon = update_pos( staddon );
-		
-		if( collide_check( staddon.proj.pos, zombie.pos ) == 1 ){
-		       zombie.alive=0;
-		}	       
+		zombie = update_pos( zombie );
+		//if( collide_check( staddon.proj.pos, zombie.pos ) == 1 ){
+		 //      zombie.alive=0;
+		//}	       
 
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
 		SDL_FillRect( screen, NULL, ((0,0,0)) );
@@ -143,6 +154,7 @@ int main( int argc, char *argv[] ){
 		}
 		SDL_BlitSurface( staddon.Sprite, NULL, screen, &staddon.pos );
 		SDL_Flip( screen );
+		SDL_Delay(30);
 	}	
 	SDL_Quit();
 	return 0;
