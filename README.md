@@ -8,6 +8,8 @@ Currently in very (very) early stage.  Much of what gets changed in this stage i
 
 <br>
 
+<img src="assets/zombie.bmp">
+
 Currently working on combat mechanics, and designing our first set of sprites.
 
 <br>
