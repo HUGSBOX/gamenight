@@ -27,6 +27,11 @@ int main( int argc, char *argv[] ){
 	entities[active_entities] = make_sprite( "assets/fuckinstaddon.bmp" );
 	active_entities++;
 	entities[active_entities] = make_sprite( "assets/zombie.bmp" );
+	active_entities++;
+	entities[active_entities] = make_sprite( "assets/zombie.bmp" );
+	active_entities++;
+	entities[active_entities] = make_sprite( "assets/zombie.bmp" );
+	active_entities++;
 
 
 	//This one's gotta be done at the start of each program (as far as I can tell)
@@ -45,10 +50,20 @@ int main( int argc, char *argv[] ){
 
 	entities[1].pos.x = 400;
 	entities[1].pos.y = 400;
-	entities[1].pos.w = 56;
-	entities[1].pos.h = 56;
+	entities[1].pos.w = 50;
+	entities[1].pos.h = 50;
 
-//	SDL_SetColorKey( *entities[1].Sprite, SDL_TRUE, ((255,0,255)) );
+	entities[2].pos.x = 200;
+	entities[2].pos.y = 200;
+	entities[2].pos.w = 50;
+	entities[2].pos.h = 50;
+
+	entities[3].pos.x = 500;
+	entities[3].pos.y = 500;
+	entities[3].pos.w = 50;
+	entities[3].pos.h = 50;
+
+	SDL_SetColorKey( screen, SDL_TRUE, ((255,0,255)) );
 
 	//This will put the player Sprite surface onto the screen surface.   
 	SDL_BlitSurface( entities[0].Sprite, NULL, screen, &entities[0].pos );
@@ -132,19 +147,21 @@ int main( int argc, char *argv[] ){
 		}
 
 		//Basic AI 
-		if( entities[1].pos.x > entities[0].pos.x ){
-			entities[1].xvel = -1;
+		for( int i=1;i<active_entities;i++ ){
+			if( entities[i].pos.x > entities[0].pos.x ){
+				entities[i].xvel = -1;
+			}
+			if( entities[i].pos.x < entities[0].pos.x ){
+				entities[i].xvel = 1;
+			}
+			if( entities[i].pos.y > entities[0].pos.y ){
+				entities[i].yvel = -1;
+			}
+			if( entities[i].pos.y < entities[0].pos.y ){
+				entities[i].yvel = 1;
+			}
+			entities[i] = update_pos( entities[i] );
 		}
-		if( entities[1].pos.x < entities[0].pos.x ){
-			entities[1].xvel = 1;
-		}
-		if( entities[1].pos.y > entities[0].pos.y ){
-			entities[1].yvel = -1;
-		}
-		if( entities[1].pos.y < entities[0].pos.y ){
-			entities[1].yvel = 1;
-		}
-
 		//RENDERING AREA
 		
 		if( entities[0].active_proj == 1 ){
@@ -155,20 +172,20 @@ int main( int argc, char *argv[] ){
 				entities[0].proj = propel( entities[0].proj );
 			}
 		}
-
+		
 		entities[0] = update_pos( entities[0] );
-		entities[1] = update_pos( entities[1] );
 		
 		//check collisions
-		for( int i=1;i<active_entities+1;i++ ){
+		for( int i=1;i<active_entities;i++ ){
 			if( entities[0].proj.lifespan>0 ){
 				if( collide_check( entities[0].proj.pos, entities[i].pos ) == 1 ){
 					entities[i].alive=0;
-					active_entities--;
 				}
 			}
-			if( collide_check( entities[0].pos, entities[i].pos ) == 1 ){
-				entities[0].alive=0;
+			if( entities[i].alive!=0 ){
+				if( collide_check( entities[0].pos, entities[i].pos ) == 1 ){
+					entities[0].alive=0;
+				}
 			}
 		}
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
@@ -180,17 +197,25 @@ int main( int argc, char *argv[] ){
 				SDL_BlitSurface( entities[0].proj.Sprite, NULL, screen, &entities[0].proj.pos );
 			}
 		}
-		for( int i=0;i<active_entities+1;i++ ){
+		for( int i=0;i<active_entities;i++ ){
 			if( entities[i].alive != 0 ){
 				SDL_BlitSurface( entities[i].Sprite, NULL, screen, &entities[i].pos );
 			}
-			else{
-				
+		}
+
+		if( entities[0].alive==0 ){
+			entities[0].respawn++;
+			if( entities[0].respawn==20 ){
+				entities[0].alive=1;
+				entities[0].pos.x=10;
+				entities[0].pos.y=10;
+				entities[0].respawn=0;
 			}
 		}
+
 		SDL_Flip( screen );
 		SDL_Delay(30);
-	}	
+	}
 	SDL_Quit();
 	return 0;
 }

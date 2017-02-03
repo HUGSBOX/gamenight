@@ -28,6 +28,7 @@ struct sprite {
 	int yvel;
 	int active_proj;
 	int alive;
+	int respawn;
 };
 
 //Sprite constructor
@@ -45,6 +46,7 @@ struct sprite make_sprite( char* path_to_image ){
 	new_sprite.xvel=0;
 	new_sprite.yvel=0;
 	new_sprite.alive=1;
+	new_sprite.respawn=0;
 	new_sprite.active_proj=0;
 	new_sprite.proj.Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
 	new_sprite.proj.dir = 'e';
