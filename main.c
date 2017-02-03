@@ -178,7 +178,7 @@ int main( int argc, char *argv[] ){
 				SDL_BlitSurface( entities[0].proj.Sprite, NULL, screen, &entities[0].proj.pos );
 			}
 		}
-		for( int i=0;i<active_entities;i++ ){
+		for( int i=0;i<active_entities+1;i++ ){
 			if( entities[i].alive != 0 ){
 				SDL_BlitSurface( entities[i].Sprite, NULL, screen, &entities[i].pos );
 			}
