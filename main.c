@@ -48,10 +48,12 @@ int main( int argc, char *argv[] ){
 	entities[1].pos.w = 56;
 	entities[1].pos.h = 56;
 
+//	SDL_SetColorKey( *entities[1].Sprite, SDL_TRUE, ((255,0,255)) );
+
 	//This will put the player Sprite surface onto the screen surface.   
 	SDL_BlitSurface( entities[0].Sprite, NULL, screen, &entities[0].pos );
 	SDL_BlitSurface( entities[1].Sprite, NULL, screen, &entities[1].pos );
-
+	
 	//This is essentially what updates the screen surface and puts it onto the actual screen
 	SDL_Flip( screen );
 
@@ -183,7 +185,7 @@ int main( int argc, char *argv[] ){
 				SDL_BlitSurface( entities[i].Sprite, NULL, screen, &entities[i].pos );
 			}
 			else{
-				i--;
+				
 			}
 		}
 		SDL_Flip( screen );

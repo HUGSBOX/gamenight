@@ -55,6 +55,7 @@ struct sprite make_sprite( char* path_to_image ){
 	new_sprite.proj.pos.w=56;
 	new_sprite.proj.xvel=50;
 	new_sprite.proj.yvel=50;
+	SDL_SetColorKey( new_sprite.Sprite, SDL_TRUE, ((255,0,255)) );
 	return new_sprite;
 }
 
