@@ -1,11 +1,12 @@
+//Game Night RPG
+//Code:
+//Will Cannon <williamcannon1996@gmail.com>
+//Justice Johnstone 
+//Graphics:
+//Liam Staddon
+
 #include <SDL/SDL.h>
 #include "sprite.c"
-
-SDL_Surface TRANS_FUCKING_FORM( SDL_Surface* s ){
-	s = SDL_LoadBMP( "assets/zombie.bmp" );
-	return *s;
-}
-
 
 int main( int argc, char *argv[] ){
 
@@ -52,16 +53,19 @@ int main( int argc, char *argv[] ){
 	entities[1].pos.y = 400;
 	entities[1].pos.w = 50;
 	entities[1].pos.h = 50;
+	entities[1].alive = 2;
 
 	entities[2].pos.x = 200;
 	entities[2].pos.y = 200;
 	entities[2].pos.w = 50;
 	entities[2].pos.h = 50;
+	entities[2].alive = 2;
 
 	entities[3].pos.x = 500;
 	entities[3].pos.y = 500;
 	entities[3].pos.w = 50;
 	entities[3].pos.h = 50;
+	entities[3].alive = 2;
 
 	SDL_SetColorKey( screen, SDL_TRUE, ((255,0,255)) );
 
@@ -177,15 +181,16 @@ int main( int argc, char *argv[] ){
 		
 		//check collisions
 		for( int i=1;i<active_entities;i++ ){
-			if( entities[0].proj.lifespan>0 ){
-				if( collide_check( entities[0].proj.pos, entities[i].pos ) == 1 ){
-					entities[i].alive=0;
+			if( entities[i].alive!=0 ){	
+				if( entities[0].proj.lifespan>0 ){
+					if( collide_check( entities[0].proj.pos, entities[i].pos ) == 1 ){
+						entities[i].alive--;
+						entities[0].proj.lifespan=0;
+					}
 				}
-			}
-			if( entities[i].alive!=0 ){
-				if( collide_check( entities[0].pos, entities[i].pos ) == 1 ){
-					entities[0].alive=0;
-				}
+					if( collide_check( entities[0].pos, entities[i].pos ) == 1 ){
+						entities[0].alive=0;
+					}
 			}
 		}
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
