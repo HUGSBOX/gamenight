@@ -48,15 +48,15 @@ struct sprite make_sprite( char* path_to_image ){
 	new_sprite.alive=1;
 	new_sprite.respawn=0;
 	new_sprite.active_proj=0;
-	new_sprite.proj.Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
+	new_sprite.proj.Sprite = SDL_LoadBMP( "assets/dot.bmp" );
 	new_sprite.proj.dir = 'e';
 	new_sprite.proj.lifespan=0;
 	new_sprite.proj.pos.x=100;
 	new_sprite.proj.pos.y=100;
-	new_sprite.proj.pos.h=56;
-	new_sprite.proj.pos.w=56;
-	new_sprite.proj.xvel=50;
-	new_sprite.proj.yvel=50;
+	new_sprite.proj.pos.h=20;
+	new_sprite.proj.pos.w=20;
+	new_sprite.proj.xvel=40;
+	new_sprite.proj.yvel=40;
 	SDL_SetColorKey( new_sprite.Sprite, SDL_TRUE, ((255,0,255)) );
 	return new_sprite;
 }
@@ -69,11 +69,11 @@ struct sprite update_pos( struct sprite spr ){
 }
 //reinits the projectile to the sprite's position
 struct projectile launch_projectile( struct projectile prj, char direction, struct sprite psource ){
-	prj.Sprite = SDL_LoadBMP( "assets/zombie.bmp" );
+	prj.Sprite = SDL_LoadBMP( "assets/dot.bmp" );
 	prj.pos.x=psource.pos.x;
 	prj.pos.y=psource.pos.y;
-	prj.pos.w=56;
-	prj.pos.h=56;
+	prj.pos.w=20;
+	prj.pos.h=20;
 	prj.dir=direction;
 	prj.lifespan=50;
 	return prj;
@@ -110,6 +110,11 @@ int collide_check( SDL_Rect rect1, SDL_Rect rect2 ){
 	}
 	if( rect1.x >= leftSideB && rect1.x <= rightSideB ){
 		if( rect1.y >= topB && rect1.y <= bottomB ){
+			return 1;
+		}
+	}
+	if( rightSideA >= leftSideB && rightSideB >= leftSideA ){
+		if( topA <= bottomB && topB <= bottomA ){
 			return 1;
 		}
 	}

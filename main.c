@@ -27,12 +27,10 @@ int main( int argc, char *argv[] ){
 	//active_entities, and then increase active_entities.
 	entities[active_entities] = make_sprite( "assets/fuckinstaddon.bmp" );
 	active_entities++;
-	entities[active_entities] = make_sprite( "assets/zombie.bmp" );
-	active_entities++;
-	entities[active_entities] = make_sprite( "assets/zombie.bmp" );
-	active_entities++;
-	entities[active_entities] = make_sprite( "assets/zombie.bmp" );
-	active_entities++;
+	for( int i=1;i<20;i++ ){
+		entities[active_entities] = make_sprite( "assets/zombie.bmp" );
+		active_entities++;
+	}
 
 
 	//This one's gotta be done at the start of each program (as far as I can tell)
@@ -40,32 +38,22 @@ int main( int argc, char *argv[] ){
 	
 	
 	//SDL_SetVideoMode takes coords, bits/pixel, SDL_SWSURFACE is 'software surface', as opposed to hardware surface
-	screen = SDL_SetVideoMode( 600,600,32,SDL_SWSURFACE );
+	screen = SDL_SetVideoMode( 1250,700,32,SDL_SWSURFACE );
 	
 
 	//initial coords fo shiz
-	entities[0].pos.x = 10;
+	entities[0].pos.x = 500;
 	entities[0].pos.y = 10;
-	entities[0].pos.w = 100;
-	entities[0].pos.h = 100;
+	entities[0].pos.w = 50;
+	entities[0].pos.h = 50;
 
-	entities[1].pos.x = 400;
-	entities[1].pos.y = 400;
-	entities[1].pos.w = 50;
-	entities[1].pos.h = 50;
-	entities[1].alive = 2;
-
-	entities[2].pos.x = 200;
-	entities[2].pos.y = 200;
-	entities[2].pos.w = 50;
-	entities[2].pos.h = 50;
-	entities[2].alive = 2;
-
-	entities[3].pos.x = 500;
-	entities[3].pos.y = 500;
-	entities[3].pos.w = 50;
-	entities[3].pos.h = 50;
-	entities[3].alive = 2;
+	for( int i=1;i<20;i++ ){
+		entities[i].pos.w=50;
+		entities[i].pos.h=50;
+		entities[i].pos.x=50*i;
+		entities[i].pos.y=50*i;
+		entities[i].alive=2;
+	}
 
 	SDL_SetColorKey( screen, SDL_TRUE, ((255,0,255)) );
 
@@ -194,7 +182,7 @@ int main( int argc, char *argv[] ){
 			}
 		}
 //SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
-		SDL_FillRect( screen, NULL, ((0,0,0)) );
+		SDL_FillRect( screen, NULL, (255,255,255) );
 		
 
 		if( entities[0].active_proj == 1 ){
