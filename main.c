@@ -50,8 +50,8 @@ int main( int argc, char *argv[] ){
 	for( int i=1;i<20;i++ ){
 		entities[i].pos.w=50;
 		entities[i].pos.h=50;
-		entities[i].pos.x=50*i;
-		entities[i].pos.y=50*i;
+		entities[i].pos.x=30*i;
+		entities[i].pos.y=70*i;
 		entities[i].alive=2;
 	}
 
@@ -137,36 +137,61 @@ int main( int argc, char *argv[] ){
 			}
 			
 		}
-
+		//RENDERING AREA
+		SDL_FillRect( screen, NULL, (255, 255, 255) );//never forget this
 		//Basic AI 
 		for( int i=1;i<active_entities;i++ ){
-			if( entities[i].pos.x > entities[0].pos.x ){
-				entities[i].xvel = -1;
+			if( entities[i].alive!=0 ){
+				if( entities[i].pos.x > entities[0].pos.x ){
+					entities[i].xvel = -3;
+				}
+				if( entities[i].pos.x < entities[0].pos.x ){
+					entities[i].xvel = 3;
+				}
+				if( entities[i].pos.y > entities[0].pos.y ){
+					entities[i].yvel = -3;
+				}
+				if( entities[i].pos.y < entities[0].pos.y ){
+					entities[i].yvel = 3;
+				}
+				entities[i] = update_collider_x( entities[i] );
+				for( int n=1;n<active_entities;n++ ){
+					if( collide_check( entities[i].collider, entities[n].pos ) == 1 && i!=n ){
+						entities[i].collider=entities[i].pos;
+						entities[i].xvel=0;
+					}
+				}
+				entities[i] = update_collider_y( entities[i] );
+				for( int n=1;n<active_entities;n++ ){
+					if( entities[n].alive!=0 ){
+						if( collide_check( entities[i].collider, entities[n].pos ) == 1 && i!=n ){
+							entities[i].collider=entities[i].pos;
+							entities[i].yvel=0;
+						}
+					}
+				}
+				entities[i] = update_pos( entities[i] );
+				SDL_BlitSurface( entities[i].Sprite, NULL, screen, &entities[i].pos );
 			}
-			if( entities[i].pos.x < entities[0].pos.x ){
-				entities[i].xvel = 1;
-			}
-			if( entities[i].pos.y > entities[0].pos.y ){
-				entities[i].yvel = -1;
-			}
-			if( entities[i].pos.y < entities[0].pos.y ){
-				entities[i].yvel = 1;
-			}
-			entities[i] = update_pos( entities[i] );
 		}
-		//RENDERING AREA
 		
-		if( entities[0].active_proj == 1 ){
-			if( entities[0].proj.lifespan == 0 ){
-				entities[0].active_proj=0;
-			}
-			else if( entities[0].proj.lifespan > 0 ){
-				entities[0].proj = propel( entities[0].proj );
+		if( entities[0].alive!=0 ){
+			if( entities[0].active_proj == 1 ){
+				if( entities[0].proj.lifespan == 0 ){
+					entities[0].active_proj=0;
+				}
+				else if( entities[0].proj.lifespan > 0 ){
+					entities[0].proj = propel( entities[0].proj );
+					SDL_BlitSurface( entities[0].proj.Sprite, NULL, screen, &entities[0].proj.pos );
+				}
 			}
 		}
-		
-		entities[0] = update_pos( entities[0] );
-		
+		if( entities[0].alive!=0 ){
+			entities[0] = update_pos( entities[0] );
+		}
+		if( entities[0].alive!=0 ){
+			SDL_BlitSurface( entities[0].Sprite, NULL, screen, &entities[0].pos );
+		}
 		//check collisions
 		for( int i=1;i<active_entities;i++ ){
 			if( entities[i].alive!=0 ){	
@@ -176,36 +201,21 @@ int main( int argc, char *argv[] ){
 						entities[0].proj.lifespan=0;
 					}
 				}
-					if( collide_check( entities[0].pos, entities[i].pos ) == 1 ){
-						entities[0].alive=0;
-					}
+				if( collide_check( entities[i].pos, entities[0].pos ) == 1 ){
+					entities[0].alive=0;
+				}
 			}
 		}
-//SDL_FillRect() makes sure the screen gets cleared before you move shit around, you fucking idiot
-		SDL_FillRect( screen, NULL, (255,255,255) );
 		
-
-		if( entities[0].active_proj == 1 ){
-			if( entities[0].proj.lifespan>0 ){
-				SDL_BlitSurface( entities[0].proj.Sprite, NULL, screen, &entities[0].proj.pos );
-			}
-		}
-		for( int i=0;i<active_entities;i++ ){
-			if( entities[i].alive != 0 ){
-				SDL_BlitSurface( entities[i].Sprite, NULL, screen, &entities[i].pos );
-			}
-		}
-
 		if( entities[0].alive==0 ){
 			entities[0].respawn++;
-			if( entities[0].respawn==20 ){
+			if( entities[0].respawn==100 ){
 				entities[0].alive=1;
 				entities[0].pos.x=10;
 				entities[0].pos.y=10;
 				entities[0].respawn=0;
 			}
 		}
-
 		SDL_Flip( screen );
 		SDL_Delay(30);
 	}
