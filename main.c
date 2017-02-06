@@ -156,9 +156,11 @@ int main( int argc, char *argv[] ){
 				}
 				entities[i] = update_collider_x( entities[i] );
 				for( int n=1;n<active_entities;n++ ){
-					if( collide_check( entities[i].collider, entities[n].pos ) == 1 && i!=n ){
-						entities[i].collider=entities[i].pos;
-						entities[i].xvel=0;
+					if( entities[n].alive!=0 ){
+						if( collide_check( entities[i].collider, entities[n].pos ) == 1 && i!=n ){
+							entities[i].collider=entities[i].pos;
+							entities[i].xvel=0;
+						}
 					}
 				}
 				entities[i] = update_collider_y( entities[i] );
