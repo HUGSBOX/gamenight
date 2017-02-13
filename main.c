@@ -25,15 +25,14 @@ int main( int argc, char *argv[] ){
 	//the player entity cell will always be 0
 	//Also, entity creation should conform to the below format.  Assign the new entity to the cell
 	//active_entities, and then increase active_entities.
-	entities[active_entities] = make_sprite( "assets/fuckinstaddon.bmp" );
+	entities[active_entities] = make_sprite( "assets/player.bmp" );
 	active_entities++;
-	for( int i=1;i<20;i++ ){
+	for( int i=1;i<99;i++ ){
 		entities[active_entities] = make_sprite( "assets/zombie.bmp" );
 		active_entities++;
 	}
 
 
-	//This one's gotta be done at the start of each program (as far as I can tell)
 	SDL_Init( SDL_INIT_EVERYTHING );
 	
 	
@@ -47,11 +46,11 @@ int main( int argc, char *argv[] ){
 	entities[0].pos.w = 50;
 	entities[0].pos.h = 50;
 
-	for( int i=1;i<20;i++ ){
+	for( int i=1;i<99;i++ ){
 		entities[i].pos.w=50;
 		entities[i].pos.h=50;
-		entities[i].pos.x=30*i;
-		entities[i].pos.y=70*i;
+		entities[i].pos.x=100*i;
+		entities[i].pos.y=100*i;
 		entities[i].alive=2;
 	}
 
@@ -59,7 +58,6 @@ int main( int argc, char *argv[] ){
 
 	//This will put the player Sprite surface onto the screen surface.   
 	SDL_BlitSurface( entities[0].Sprite, NULL, screen, &entities[0].pos );
-	SDL_BlitSurface( entities[1].Sprite, NULL, screen, &entities[1].pos );
 	
 	//This is essentially what updates the screen surface and puts it onto the actual screen
 	SDL_Flip( screen );
@@ -79,16 +77,16 @@ int main( int argc, char *argv[] ){
 					run=0;
 				}
 				else if( e.key.keysym.sym == SDLK_s ){
-					entities[0].yvel = 10;
+					entities[0].yvel = 15;
 				}
 				else if( e.key.keysym.sym == SDLK_w ){
-					entities[0].yvel = -10;
+					entities[0].yvel = -15;
 				}
 				else if( e.key.keysym.sym == SDLK_a ){
-					entities[0].xvel = -10;
+					entities[0].xvel = -15;
 				}
 				else if( e.key.keysym.sym == SDLK_d ){
-					entities[0].xvel = 10;
+					entities[0].xvel = 15;
 				}
 				else if( e.key.keysym.sym == SDLK_RIGHT ){
 					if( entities[0].active_proj==1 ){
@@ -143,16 +141,16 @@ int main( int argc, char *argv[] ){
 		for( int i=1;i<active_entities;i++ ){
 			if( entities[i].alive!=0 ){
 				if( entities[i].pos.x > entities[0].pos.x ){
-					entities[i].xvel = -3;
+					entities[i].xvel = -6;
 				}
 				if( entities[i].pos.x < entities[0].pos.x ){
-					entities[i].xvel = 3;
+					entities[i].xvel = 6;
 				}
 				if( entities[i].pos.y > entities[0].pos.y ){
-					entities[i].yvel = -3;
+					entities[i].yvel = -6;
 				}
 				if( entities[i].pos.y < entities[0].pos.y ){
-					entities[i].yvel = 3;
+					entities[i].yvel = 6;
 				}
 				entities[i] = update_collider_x( entities[i] );
 				for( int n=1;n<active_entities;n++ ){
