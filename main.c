@@ -27,7 +27,7 @@ int main( int argc, char *argv[] ){
 	//active_entities, and then increase active_entities.
 	entities[active_entities] = make_sprite( "assets/player.bmp" );
 	active_entities++;
-	for( int i=1;i<99;i++ ){
+	for( int i=1;i<15;i++ ){
 		entities[active_entities] = make_sprite( "assets/zombie.bmp" );
 		active_entities++;
 	}
@@ -46,11 +46,11 @@ int main( int argc, char *argv[] ){
 	entities[0].pos.w = 50;
 	entities[0].pos.h = 50;
 
-	for( int i=1;i<99;i++ ){
+	for( int i=1;i<15;i++ ){
 		entities[i].pos.w=50;
 		entities[i].pos.h=50;
-		entities[i].pos.x=100*i;
-		entities[i].pos.y=100*i;
+		entities[i].pos.x=60*i;
+		entities[i].pos.y=60*i;
 		entities[i].alive=2;
 	}
 
@@ -135,8 +135,11 @@ int main( int argc, char *argv[] ){
 			}
 			
 		}
+		
 		//RENDERING AREA
+		
 		SDL_FillRect( screen, NULL, (255, 255, 255) );//never forget this
+		
 		//Basic AI 
 		for( int i=1;i<active_entities;i++ ){
 			if( entities[i].alive!=0 ){
@@ -186,12 +189,25 @@ int main( int argc, char *argv[] ){
 				}
 			}
 		}
+		
+		//Move & blit the player
 		if( entities[0].alive!=0 ){
+			entities[0] = update_collider_x( entities[0] );
+			if( entities[0].collider.x >= 1250 ){
+				entities[0].xvel=0;
+				entities[0].collider = entities[0].pos;
+			}
+			entities[0] = update_collider_y( entities[0] );
+			if( entities[0].collider.y >= 700 ){
+				entities[0].yvel=0;
+				entities[0].collider = entities[0].pos;
+			}
 			entities[0] = update_pos( entities[0] );
 		}
 		if( entities[0].alive!=0 ){
 			SDL_BlitSurface( entities[0].Sprite, NULL, screen, &entities[0].pos );
 		}
+
 		//check collisions
 		for( int i=1;i<active_entities;i++ ){
 			if( entities[i].alive!=0 ){	

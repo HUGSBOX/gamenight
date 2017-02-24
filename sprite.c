@@ -56,8 +56,8 @@ struct sprite make_sprite( char* path_to_image ){
 	new_sprite.proj.pos.y=100;
 	new_sprite.proj.pos.h=10;
 	new_sprite.proj.pos.w=10;
-	new_sprite.proj.xvel=20;
-	new_sprite.proj.yvel=20;
+	new_sprite.proj.xvel=30;
+	new_sprite.proj.yvel=30;
 	new_sprite.collider=new_sprite.pos;
 	SDL_SetColorKey( new_sprite.Sprite, SDL_TRUE, ((255,0,255)) );
 	return new_sprite;
@@ -102,9 +102,9 @@ int collide_check( SDL_Rect rect1, SDL_Rect rect2 ){
 	int rightSideA = rect1.x + rect1.w;
 	int rightSideB = rect2.x + rect2.w;
 	int leftSideA = rect1.x;
-	int leftSideB = rect2.x;;
+	int leftSideB = rect2.x;
 	int topA = rect1.y;
-	int topB = rect2.y;;
+	int topB = rect2.y;
 	if( rect2.x >= leftSideA && rect2.x <= rightSideA ){
 		if( rect2.y >= topA && rect2.y <= bottomA ){
 			return 1;
@@ -129,4 +129,15 @@ struct sprite update_collider_x( struct sprite spr ){
 struct sprite update_collider_y( struct sprite spr ){
 	spr.collider.y+=spr.yvel;
 	return spr;
+}
+struct sprite separate_sprites( struct sprite spr1, struct sprite spr2 ){
+	int bottomA = spr1.pos.y + spr1.pos.h;
+	int bottomB = spr2.pos.y + spr2.pos.h;
+	int rightSideA = spr1.pos.x + spr1.pos.w;
+	int rightSideB = spr2.pos.x + spr2.pos.w;
+	int leftSideA = spr1.pos.x;
+	int leftSideB = spr2.pos.x;
+	int topA = spr1.pos.y;
+	int topB = spr2.pos.y;
+	
 }
